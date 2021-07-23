@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freshjuice.monomer.priority.mapper.ResourcePriorityMapper">
+	
+	<select id="getByUrl" parameterType="java.lang.String" resultType="com.freshjuice.monomer.priority.entity.ResourcePriority">
+        select id, parent_id parentId, `code`, `name`, `type`, url, auth_if authIf
+        from resource_priority
+        where url = #{value, jdbcType=VARCHAR}
+    </select>
+
+    <select id="listByIds" resultType="com.freshjuice.monomer.priority.entity.ResourcePriority">
+        select id, parent_id parentId, `code`, `name`, `type`, url, auth_if authIf
+        from resource_priority
+        where 1=1
+        <if test="ids != null and ids.size() > 0">
+            and id in
+            <foreach collection="ids" item="item" index="index" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.freshjuice.monomer.priority.entity.ResourcePriority">
+        insert into resource_priority(
+            id
+            <if test="parentId != null and parentId != ''">,parent_id</if>
+            ,`code`, `name`, `type`, url, auth_if
+        ) values(
+            #{id}
+            <if test="parentId != null and parentId != ''">,#{parentId}</if>
+            ,#{code}, #{name}, #{type}, #{url}, #{authIf}
+        )
+    </insert>
+
+</mapper>

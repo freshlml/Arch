@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freshjuice.monomer.priority.mapper.UserMapper">
+
+	<select id="getUserByName" parameterType="java.lang.String" resultType="com.freshjuice.monomer.priority.entity.User">
+		select id, user_name as userName, password, phone
+		from user
+		where user_name = #{value, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getUserByPhone" parameterType="java.lang.String" resultType="com.freshjuice.monomer.priority.entity.User">
+		select id, user_name as userName, password, phone
+		from user
+		where phone = #{value, jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="getUserById" parameterType="java.lang.Long" resultType="com.freshjuice.monomer.priority.entity.User">
+		select id, user_name as userName, password, phone
+		from user
+		where id = #{value}
+	</select>
+
+</mapper>

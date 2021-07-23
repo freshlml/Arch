@@ -1,0 +1,104 @@
+DROP TABLE IF EXISTS `resource_priority`;
+CREATE TABLE `resource_priority`  (
+  id bigint primary key comment '主键',
+	`parent_id` bigint not null default -1 comment '父id',
+	`code` varchar(100) not null comment '资源权限code',
+	`name` varchar(100) comment '资源权限名称',
+	`type` varchar(32) not null comment '资源类型: MENU-菜单资源，DATA-数据资源',
+	`url` varchar(255) comment 'url',
+  `auth_if` char(1) comment '是否需要认证0-不需要，1-需要；不需要认证表示该资源不需要登录就可以访问',
+	`create_time` datetime default current_timestamp comment '创建时间',
+	`modify_time` datetime default current_timestamp on update current_timestamp comment '修改时间'
+);
+
+
+
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role`  (
+	`id` bigint primary key comment '主键',
+  `role_code` varchar(100) not null comment '角色 code',
+  `role_name` varchar(100) comment '角色名称',
+	`create_time` datetime default current_timestamp comment '创建时间',
+	`modify_time` datetime default current_timestamp on update current_timestamp comment '修改时间'
+);
+
+
+DROP TABLE IF EXISTS `role_resource`;
+CREATE TABLE `role_resource`  (
+	id bigint primary key comment '主键',
+	role_id bigint not null comment '角色 id',
+	resource_id bigint not null comment 'resource_priority id',
+	`remark` varchar(255) comment '说明',
+  `create_time` datetime default current_timestamp comment '创建时间',
+	`modify_time` datetime default current_timestamp on update current_timestamp comment '修改时间'
+);
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`  (
+  id bigint primary key comment '主键',
+  `user_name` varchar(100) not null comment '用户名',
+  `password` varchar(100) not null comment '密码',
+  `phone` varchar(11) not null comment '手机号',
+	`create_time` datetime default current_timestamp comment '创建时间',
+	`modify_time` datetime default current_timestamp on update current_timestamp comment '修改时间'
+);
+
+
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE `user_role`  (
+  id bigint primary key comment '主键',
+  `user_id` bigint not null comment '用户 id',
+  `role_id` varchar(100) not null comment '角色 id',
+	`remark` varchar(255) comment '说明',
+	`create_time` datetime default current_timestamp comment '创建时间',
+	`modify_time` datetime default current_timestamp on update current_timestamp comment '修改时间'
+);
+
+
+-- 测试数据
+delete from user;
+insert into user(id, `user_name`, `password`, `phone`) values(1, 'di', 'ioc', '15623236821');
+insert into user(id, `user_name`, `password`, `phone`) values(2, 'dl', 'ioc', '13237177828');
+
+delete from role;
+insert into role(id, `role_code`, `role_name`) values(1, 'role_a', '角色a');
+insert into role(id, `role_code`, `role_name`) values(2, 'role_b', '角色b');
+
+delete from user_role;
+insert into user_role(id, user_id, role_id, remark) values(1, 1, 1, '1号用户有1号角色');
+insert into user_role(id, user_id, role_id, remark) values(11, 1, 2, '1号用户有2号角色');
+insert into user_role(id, user_id, role_id, remark) values(2, 2, 1, '2号用户有1号角色');
+
+delete from resource_priority;
+insert into resource_priority(id, parent_id, `code`, `name`, `type`, url, auth_if) values
+(1, -1, 'index', '主页[/]', 'DATA', '/', '0'), -- 可配置也可不配置。如果不配置，默认需要认证才能访问，同时权限校验没有意义；如果配置，可以控制无需认证即可访问，同时也可以权限配置和校验
+(2, -1, 'index2', '主页[/index]', 'DATA', '/index', '0'),
+(3, -1, 'login', '登录[/login]', 'DATA', '/login', '0'),
+(4, -1, 'login_confirm', '登录[/loginConfirm]', 'DATA', '/loginConfirm', '0'),
+(5, -1, 'phone_credit', '手机号验证码[/phoneLogin/getCredit]', 'DATA', '/phoneLogin/getCredit', '0'),
+(6, -1, 'phone_login', '手机号登录[/phoneLogin/login]', 'DATA', '/phoneLogin/login', '0'),
+(7, -1, 'error', '错误页面[/error]', 'URL', '/error', '0');
+
+insert into resource_priority(id, parent_id, `code`, `name`, `type`, url, auth_if) values
+(9, -1, 'menu1', '菜单1', 'MENU', null, '1'),  -- MENU类型表示层级菜单，DATA类型表示菜单点击后的页面上的一些操作资源
+(10, 9, 'pr1', 'pr1菜单', 'MENU', '/pr1', '1'),            -- 可以查询角色拥有哪些菜单的资源权限，查询出来一个属性的菜单列表，带url的菜单点击后访问该url,可以在此url上使用code字段校验权限
+(11, 10, 'pr1Add', 'pr1Add资源', 'DATA', '/pr1Add', '1'),  -- 可以查询角色拥有哪些DATA资源的权限，资源url访问时，可以使用code字段校验权限
+(12, 10, 'pr1Del', 'pr1Del资源', 'DATA', '/pr1Del', '1'),
+(20, 9, 'pr2', 'pr2菜单', 'MENU', '/pr2', '1'),
+(30, 9, 'pr3', 'pr3菜单', 'MENU', '/pr3', '1');
+
+
+
+delete from role_resource;
+insert into role_resource(id, role_id, resource_id, remark) values(9, 1, 9, '1号角色->9');
+insert into role_resource(id, role_id, resource_id, remark) values(10, 1, 10, '1号角色->10');
+insert into role_resource(id, role_id, resource_id, remark) values(11, 1, 11, '1号角色->11');
+insert into role_resource(id, role_id, resource_id, remark) values(12, 1, 12, '1号角色->12');
+insert into role_resource(id, role_id, resource_id, remark) values(13, 1, 20, '1号角色->20');
+insert into role_resource(id, role_id, resource_id, remark) values(14, 1, 30, '1号角色->30');
+
+insert into role_resource(id, role_id, resource_id, remark) values(19, 2, 9, '2号角色->9');
+insert into role_resource(id, role_id, resource_id, remark) values(20, 2, 10, '2号角色->10');
+insert into role_resource(id, role_id, resource_id, remark) values(21, 2, 11, '2号角色->11');
+
+

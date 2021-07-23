@@ -1,0 +1,154 @@
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+    servlet:
+      content-type: text/html
+  mvc:
+    servlet:
+      path: /
+    ##no-handler(404)时抛异常
+    throw-exception-if-no-handler-found: true
+server:
+  port: 7109
+  servlet:
+    session:
+      cookie:
+        name: s-token
+
+#
+#spring-boot-starter-web
+#
+#1、静态资源请求 （静态资源的加载原理：实际上是配置一个mapping(order=Int.MAX_VALUE-1)）
+#在spring boot 中默认的静态资源定义为 /static /public /resources /META-INF/resources
+#spring boot支持对静态资源的配置
+#spring.mvc.static-path-pattern=/statics/** 配置静态资源请求前缀，默认为/**(即web application)
+#spring.resources.static-locations=classpath:/statics/ 将override默认的静态资源定义
+#上述两条配置的原理如下
+#registry.addResourceHandler("/statics/**").addResourceLocations("classpath:/statics/");
+#
+#通过WebMvcConfigurer接口中的addResourceHandlers方法可以增加静态资源的加载
+#
+#2、访问localhost:8080， spring boot内置servlet容器将web应用作为默认web应用，所以不用加web应用的名称
+#默认情况下，spring boot(应该是默认配置了对/请求的mapping)将会在静态资源中找index.html、在视图资源中找index视图
+#程序中如果在HandlerMappingRequestMapping中设置/的mapping，将覆盖上述
+#
+#3、favicon支持
+#在静态资源和classpath中找favicon.ico (实际是通过配置的handlerMapping加载favicon.ico)
+#
+#4、spring boot web autoConfiguration的handlerMapping、handlerAdapter
+#只要了解AutoConfiguration的原理，对着源码看大致没什么问题
+#
+#5、实现WebMvcConfigurer接口能够做什么
+#可以配置messageConverters,exceptionResolvers,argumentResolvers,returnValueHandlers,viewResolvers,corsMappings,interceptor等等
+#6、实现WebMvcRegistrations接口能够做什么
+#覆盖默认的RequestMappingHandlerMapping，RequestMappingHandlerAdapter，ExceptionHandlerExceptionResolver
+#（和WebMvcConfigurer定制化的维度不同）
+#7、@EnableWebMvc take complete control of spring mvc
+#
+#8、spring boot的默认异常resolver
+#在spring boot中默认定义了ExceptionHandlerExceptionResolver 用于处理@ControllerAdvice@ExceptionHandler
+#自定义了ResponseStatusExceptionResolver 用于处理404 500等状态的异常
+#... ...
+#最大order的ExceptionResolver将异常转发到 @RequestMapping("${server.error.path:${error.path:/error}}") BasicErrorController
+#
+#所以，sb中异常处理一般而言就应该是：
+#1）、对于controller中执行业务方法等抛出的异常，一般通过@ControllerAdvice@ExceptionHandler处理
+#2）、extends BasicErrorController 实现自定义的数据返回格式
+#
+#9、api 跨域（cors）
+# WebMvcConfigurer中addCorsMappings方法
+# 在controller中使用@CrossOrigin
+#
+#10、java ee filter、servlet、listener支持
+#
+#11、locale支持?
+#
+#12、MultipartResolver?
+#
+#
+
+#aop
+#spring.aop.auto=true
+#spring.aop.proxy-target-class=true
+#
+
+#banner is what??
+
+#WebFlux Reactive??
+
+#
+#spring-boot-logging
+#
+#1、通过spring-boot-starter，将会导入spring-boot-starter-logging
+#<dependency>
+#	<groupId>org.springframework.boot</groupId>
+#	<artifactId>spring-boot-starter</artifactId>
+#</dependency>
+#2、spring-boot-starter-logging 使用 slf4j+logback同时将common-logging适配成slf4j
+#3、配合这种起步依赖，spring boot的AutoConfiguration提供一些配置参数定制化日志输出
+#一般而言，可以指定logback.xml配置文件实现日志的定制化输出
+#
+logging:
+  config: classpath:logback-spring.xml
+#(当使用logback-spring.xml命名时，可以使用spring提供的额外语法)
+#
+
+#mybatis
+#mybatis:
+#  mapper-locations: classpath*:com/freshjuice/isomer/**/*.Mapper.xml
+#
+
+mybatis-plus:
+  mapper-locations: classpath*:com/freshjuice/isomer/**/*.Mapper.xml
+  typeEnumsPackage: com.**.enums
+
+#devtools restart相关配置
+#by default devtools 禁用了缓存，如Thymeleaf视图的缓存
+
+#restart trigger
+#1、当update classpath
+
+#2、自动忽略spring-boot, spring-boot-devtools, springboot-autoconfigure, spring-boot-actuator, and spring-boot-starter的修改
+
+#3、默认，/META-INF/maven, /META-INF/resources, /resources, /static, /public, or /templates
+#目录下的修改不会触发restart
+#通过spring.devtools.restart.exclude=static/**,public/** 配置那些不触发restart（将覆盖默认配置）
+#spring.devtools.restart.additional-exclude 支持在默认配置基础上增加额外的目录
+
+#4、spring.devtools.restart.additionalpaths 配置不在classpath中的也触发restart
+
+#5、spring.devtools.restart.log-condition-evaluation-delta=false 该配置表示不打印restart的启动日志信息
+
+#6、spring.devtools.restart.trigger-file 配置指向trigger-file路径 trigger-file文件可以配置在何时触发restart
+
+#restart 原理，使用"restart classloader"加载变化的类，使用"base classloader"加载第三方jar等中的类
+#1、对于一个依赖于module中jar的程序，应该使用"restart classloader"去加载module中jar
+#则应该创建META-INF/spring-devtools.properties
+#restart.exclude.key(unique)=/mycorp-common-[\\w-]+\.jar  表示 将使用"restart classloader"记载该jar
+
+#LiveReload: broser refresh trigger
+#spring.devtools.livereload.enabled=false can禁用
+
+
+
+
+
+
+#需要验证 Thymeleaf 缓存配置 与 缓存过期模型 验证模型的关系
+
+
+
+
+
+
+
+
+
+

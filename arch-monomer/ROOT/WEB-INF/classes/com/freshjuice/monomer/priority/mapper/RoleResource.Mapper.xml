@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freshjuice.monomer.priority.mapper.RoleResourceMapper">
+	
+    <select id="listByRoleIds" resultType="com.freshjuice.monomer.priority.entity.RoleResource">
+        select id, role_id roleId, resource_id resourceId, remark
+        from role_resource where 1=1
+        <if test="roleIds != null and roleIds.size() > 0">
+            and role_id in
+            <foreach collection="roleIds" item="item" index="index" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+	
+</mapper>

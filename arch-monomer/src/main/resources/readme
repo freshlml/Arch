@@ -1,0 +1,60 @@
+spring.io spring.io spring.io  重要的域名写三遍
+
+src/test/java
+使用@WebServlet @WebFilter @WebListener
+配置DispatcherServlet Filter ContextLoaderListener
+
+在web.xml中配置DispatcherServlet和ContextLoaderLister时，可以指定使用JavaConfig模式加载配置
+ContextLoaderListener中指定javaConfig配置
+<context-param>
+	<param-name>contextClass</param-name>
+	<param-value>org.springframework.web.context.suppport.AnnotationConfigApplicationContext</param-value>
+	<param-name>contextConfigLocation</param-name>
+	<param-value>../../ApplicationConfig</param-value>
+</context-param>
+DispatcherServler中指定javaConfig配置
+<init-param>
+	<param-name>contextClass</param-name>
+	<param-value>org.springframework.web.context.suppport.AnnotationConfigApplicationContext</param-value>
+	<param-name>contextConfigLocation</param-name>
+	<param-value>../../MvcConfig</param-value>
+</init-param>
+
+
+
+web.xml零配置原理
+servlet容器支持ServletContainerInitializer
+spring提供ServletContainerInitializer的实现类SpringServletContainerInitializer，该类将
+查找所有WebApplicationInitializer实现
+spring针对一些特定场景提供AbstractSecurityWebApplicationInitializer 
+AbstractAnnotationConfigDispatcherServletInitializer （该类会启动DispatcherServlet,ContextLoaderListener,指定javaConfig形式的配置）
+(WebApplicationInitializer在SpringServletContainerInitializer是一个List)
+
+FlInitializer extends WebApplicationInitializer
+FlWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer
+
+使用javaConfig配置
+ApplicationConfig.class
+ApplicationShiroConfig.class
+ApplicationDao.class
+ApplicationTextConfig.class
+MvcConfig.class
+
+
+日志
+slf4j、logback、jcl-over-slf4j(将commons-logging适配成slf4j)
+则，如果没有logback.xml配置文件，则日志输出到console
+生产环境应该提供logback.xml文件
+https://logback.qos.ch/manual/introduction.html
+
+
+
+
+
+
+
+
+
+
+
+
