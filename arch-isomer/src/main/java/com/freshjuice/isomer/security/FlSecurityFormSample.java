@@ -6,9 +6,10 @@ import com.freshjuice.isomer.security.form.FlDbUserDetailsService;
 public class FlSecurityFormSample {
 
     /**
+     *spring security 认证
      * 1、基于浏览器访问的后端系统
      * 2、前后端分离
-     * 3、后端系统可单机，可集群部署
+     * 3、后端系统可集群部署，认证信息保存在session中，session实现共享
      * 4、基于表单的认证，UsernamePasswordAuthenticationFilter
      * 5、可配置的授权
      */

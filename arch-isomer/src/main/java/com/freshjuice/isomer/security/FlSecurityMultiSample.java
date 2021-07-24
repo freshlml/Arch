@@ -7,10 +7,11 @@ import com.freshjuice.isomer.security.multi.rep.AuthenticationRepFilter;
 public class FlSecurityMultiSample {
 
     /**
+     *spring security 认证
      * 1、基于浏览器访问的后端系统
      * 2、前后端分离
-     * 3、后端系统可单机，可集群部署
-     * 4、多种认证方式
+     * 3、后端系统可集群部署，认证信息保存在session中，session实现共享
+     * 4、多种认证方式,spring security web全套组件的使用
      * 5、可配置的授权
      */
 

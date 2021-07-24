@@ -3,11 +3,10 @@ package com.freshjuice.isomer.security;
 public class FlSecuritySample {
 
     /**
-     * spring security的使用取舍
-     * 1、针对基于浏览器访问的spring security架子可以采用:{@link FlSecurityMultiSample},{@link FlSecurityFormSample}
-     * 2、针对移动应用的无状态认证,基于浏览器访问的认证也可以采用无状态认证
-     *    1)、JWT @see xy-common
-     *    2)、OAuth2 @see ArchPoner
+     *第一: {@link FlSecurityFormSample}
+     *第二: {@link FlSecurityMultiSample}
+     *第三: @see arch-oauth2-poner/FlSecurityOAuth2Sample
+     *第四: @see xy-common
      */
 
     /**

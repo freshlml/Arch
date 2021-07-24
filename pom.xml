@@ -11,6 +11,7 @@
         <module>arch-monomer</module>
         <module>arch-isomer</module>
         <module>arch-oauth2-poner</module>
+        <module>arch-oauth2-auth</module>
     </modules>
     <packaging>pom</packaging>
     <name>Arch</name>

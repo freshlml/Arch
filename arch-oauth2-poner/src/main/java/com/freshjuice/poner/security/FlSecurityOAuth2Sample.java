@@ -2,6 +2,8 @@ package com.freshjuice.poner.security;
 
 public class FlSecurityOAuth2Sample {
     /**
+     *spring security + OAuth2
+     *
      *OAuth2
      *   Resource Owner(User)授权Client访问其在Resource Server中的资源
      *spring security的OAuth2支持
@@ -10,21 +12,19 @@ public class FlSecurityOAuth2Sample {
      *   spring-security-oauth2-authorization-server.jar  TODO,实验性的
      *   spring-security-oauth2-resource-server.jar
      *   spring-security-oauth2-jose.jar
-     *spring cloud security
+     *spring cloud security,TODO?
      *
      */
 
     /**
      *认证系统抽象
-     * 后端系统作为OAuth2 provider
-     *
-     * Client: 自家的前端和App作为Client访问后端OAuth2 provider
-     *    使用password模式，得到token
-     * Client: 外部的前端和App作为Client访问后端OAuth2 provider
-     *    使用授权码模式，得到token
-     * Client: 自家的前端、App和后端系统作为Client访问其他OAuth2 provider
-     *    前端、App和后端配合获取其他系统的token
-     *
+     * 1、作为Client访问其他的OAuth2 provider
+     *    1)、spring security client/login
+     *    2)、or 不使用spring security client,自定义一些组件配合前端/app与OAuth2 provider交互
+     * 2、后端系统实现一个OAuth2 provider
+     *    1)、前端/app使用密码模式获取token
+     *    2)、外部应用使用授权码模式获取token
+     * @see arch-oauth2-auth/FlSecurityAuthSample
      */
 
     /**
@@ -140,7 +140,7 @@ public class FlSecurityOAuth2Sample {
      */
 
 
-    /**
+    /**OAuth2 Client
      *第一: ClientRegistration,ClientRegistrationRepository
      * public final class ClientRegistration implements Serializable {
      *      private String registrationId;     //id
