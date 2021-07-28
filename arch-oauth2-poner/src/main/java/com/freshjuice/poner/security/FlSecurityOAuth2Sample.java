@@ -18,13 +18,9 @@ public class FlSecurityOAuth2Sample {
 
     /**
      *认证系统抽象
-     * 1、作为Client访问其他的OAuth2 provider
-     *    1)、spring security client/login
-     *    2)、or 不使用spring security client,自定义一些组件配合前端/app与OAuth2 provider交互
-     * 2、后端系统实现一个OAuth2 provider
-     *    1)、前端/app使用密码模式获取token
-     *    2)、外部应用使用授权码模式获取token
-     * @see arch-oauth2-auth/FlSecurityAuthSample
+     *  1、使用spring security 构建 OAuth2 Authorization Server
+     *  2、Resource Server校验资源权限，网关/服务单元
+     *  @see arch-oauth2-auth/FlSecurityAuthSample
      */
 
     /**
@@ -109,6 +105,7 @@ public class FlSecurityOAuth2Sample {
      *        申请token地址: 由Authorization Server提供
      *        携带的参数: grant_type=password    //密码模式
      *                  user_name=principal    //用户标记
+     *                  client_id=client_id    //client_id
      *                  password=credentials   //用户凭证
      *                  scope=read,write       //授权范围,值的具体意义由Authorization Server定义
      *        请求响应: json格式
@@ -124,6 +121,7 @@ public class FlSecurityOAuth2Sample {
      *     1)、Client申请token
      *         申请token地址: 由Authorization Server提供
      *         携带的参数: grant_type=client_credentials    //客户端凭证模式
+     *                   client_id=client_id               //client_id
      *                   scope=read,write       //授权范围,值的具体意义由Authorization Server定义
      *         请求响应: json格式
      *               {...}
