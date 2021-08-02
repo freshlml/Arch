@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+	<springProfile name="dev">
+		<property name="FILE_PATH" value="${user.home}/logs" />
+	</springProfile>
+	<springProfile name="prod">
+		<property name="FILE_PATH" value="/usr/logs" />
+	</springProfile>
+
+	<property name="PROJECT_NAME" value="arch-oauth2-auth" />
+
+	<appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>
+				<!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-4relative [%yellow(%thread)] %highlight(%-5level) %green(%logger{35}.%M\(%L\)) - %msg%n
+			</pattern>
+		</layout>
+	</appender>
+	<appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${FILE_PATH}/${PROJECT_NAME}/std_ste.out</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>ACCEPT</onMismatch>
+		</filter>
+		<encoder>
+			<pattern>
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-4relative [%yellow(%thread)] %highlight(%-5level) %green(%logger{35}.%M\(%L\)) - %msg%n
+			</pattern>
+		</encoder>
+		<!--滚动策略-->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--路径-->
+			<fileNamePattern>${FILE_PATH}/${PROJECT_NAME}/std_ste.%d.out</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	<appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<encoder>
+			<pattern>
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-4relative [%yellow(%thread)] %highlight(%-5level) %green(%logger{35}.%M\(%L\)) - %msg%n
+			</pattern>
+		</encoder>
+		<!--滚动策略-->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--路径-->
+			<fileNamePattern>${FILE_PATH}/${PROJECT_NAME}/std_ste_error.%d.out</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
+	<!-- 通过logger定义package的日志打印 -->
+	<!--<logger name="com.freshjuice.isomer.*.mapper" level="DEBUG" />-->
+
+
+	<root level="info">
+		<appender-ref ref="consoleLog" />
+		<appender-ref ref="fileInfoLog" />
+		<appender-ref ref="fileErrorLog" />
+	</root>
+
+</configuration>

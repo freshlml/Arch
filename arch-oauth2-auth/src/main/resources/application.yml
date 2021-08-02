@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+    servlet:
+      content-type: text/html
+  mvc:
+    servlet:
+      path: /
+    ##no-handler(404)时抛异常
+    throw-exception-if-no-handler-found: true
+server:
+  port: 7107
+  servlet:
+    session:
+      cookie:
+        name: s-token
+
+logging:
+  config: classpath:logback-spring.xml
+
+mybatis-plus:
+  mapper-locations: classpath*:com/freshjuice/auth/**/*.Mapper.xml
+  typeEnumsPackage: com.**.enums
+
+
+
+
+
+
+
+
+
+

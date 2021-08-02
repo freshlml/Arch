@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/auth?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+  redis:
+    cluster:
+      nodes: 47.98.221.91:6379,47.98.221.91:6380,47.98.221.91:6381,47.98.221.91:6382,47.98.221.91:6383,47.98.221.91:6384
+      max-redirects: 3
+    password:
+    # commandTimeout（毫秒）
+    timeout: 3000
+    # Redis节点上默认情况下有16个数据库，这里配置具体使用的数据库，默认是0
+    database: 0
+##    redisson:
+##      config: classpath:redisson-config.yml
