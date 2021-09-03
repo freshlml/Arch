@@ -807,38 +807,71 @@ public class FlSecurityAuthSample {
      *
      *   2)、password模式
      *      /oauth/token
-     *      body参数: grant_type=password&client_id=id&client_secret=secret&username=name&password=pwd
+     *      body参数: grant_type=password&client_id=id&client_secret=secret&username=name&password=pwd&scope=scope
      *      说明: AuthAuthenticationFilter中可以校验验证码
      *           ResourceOwnerPasswordTokenGranter中校验username,password
-     *           支持刷新token: body参数: grant_type=refresh_token&client_id=id&client_secret=secret&refresh_token=refresh_token
+     *           支持刷新token: body参数: grant_type=refresh_token&client_id=id&client_secret=secret&refresh_token=refresh_token&scope=scope
      *
      *   3)、自定义模式
      *      /oauth/token
-     *      body参数: grant_type=phone_code&client_id=id&client_secret=secret&phone=15623236821&sms_code=123456
+     *      body参数: grant_type=phone_code&client_id=id&client_secret=secret&phone=15623236821&sms_code=123456&scope=scope
      *      说明: PhoneCodeTokenGranter
-     *           支持刷新token: body参数: grant_type=refresh_token&client_id=id&client_secret=secret&refresh_token=refresh_token
+     *           支持刷新token: body参数: grant_type=refresh_token&client_id=id&client_secret=secret&refresh_token=refresh_token&scope=scope
      *
      *   4)、Implicit模式
-     *      /oauth/authorize response_type=token&client_id=for_other&redirect_uri=url&state=state
-     *      or body参数: response_type=token&client_id=id&redirect_uri=url&state=state
+     *      /oauth/authorize response_type=token&client_id=for_other&redirect_uri=url&state=state&scope=scope
+     *      or body参数: response_type=token&client_id=id&redirect_uri=url&state=state&scope=scope
      *      授权页面确认授权: /oauth/authorize
      *                   body参数: user_oauth_approval=true&scope.oauth2_user=true&authorize=true
      *              授权页面确认授权后redirect: redirect_uri?token=token&state=state
      *
      *   5)、Authorization_code模式
-     *      /oauth/authorize response_type=code&client_id=for_other&redirect_uri=http://localhost:7107/login/oauth2/test_other&state=state
+     *      /oauth/authorize response_type=code&client_id=for_other&redirect_uri=url&state=state&scope=scope
      *      授权页面确认授权: /oauth/authorize
      *                    body参数: user_oauth_approval=true&scope.oauth2_user=true&authorize=true
      *                授权页面确认授权后redirect: redirect_uri?code=sNTqLd&state=state
      *
      *      /oauth/token
-     *      body参数: grant_type=authorization_code&code=code&client_id=for_other&client_secret=secret&redirect_uri=之前的url
-     *      交互流程:
-     *      1、第三方Client调用/oauth/authorize，返回未登录json数据
-     *      2、第三方Client(前端)弹框形式加载我方登录页面，第三方Client(移动端)调起我方App，我方App弹出登录页面，登录页面执行登录: /oauth/token,返回token
-     *      3、第三方Client收到token，将token放在header中，调用/oauth/authorize，返回授权json数据
-     *      4、第三方Client(前端)弹框形式加载我方授权页面，第三方Client(移动端)调起我方App，我方App弹出授权页面，授权页面确认授权: /oauth/authorize,返回redirect
-     *      5、第三方Client执行redirect，一般是在第三方Client的服务端，调用/oauth/token返回token
+     *      body参数: grant_type=authorization_code&code=code&client_id=for_other&client_secret=secret&redirect_uri=之前的url&scope=scope
+     *
+     *
+     *      交互流程Web原始:
+     *      1、第三方Client(Web)请求授权: /oauth/authorize
+     *      2、如果携带token，userApproval判断为true执行redirect，进行6，否则返回授权页面，进行5
+     *      3、如果不携带token，返回登录页面，进行4
+     *      4、第三方Client显示登录页面，确认登录接口: /oauth/token,返回token，进行2
+     *      5、授权页面确认授权: /oauth/authorize,执行redirect
+     *      6、第三方Client调用/oauth/token获取token，get_user等形式接口获取若干用户信息
+     *
+     *      交互流程Web原始2:
+     *      1、第三方Client(Web)请求授权: /oauth/authorize
+     *      2、不管是否携带token，返回登录并授权页面，第三方Client浏览器显示该页面
+     *      3、登录授权页面确认: /oauth/authorize，携带登录信息和授权参数, 执行redirect
+     *      4、第三方Client调用 /oauth/token获取token，get_user等形式接口获取若干用户信息
+     *
+     *      交互流程Web:
+     *      1、第三方Client(Web)跳转我方Web应用的一个地址，我方Web应用请求授权: /oauth/authorize
+     *      2、如果携带token，userApproval判断为true执行redirect，进行6，否则返回授权json数据，进行5
+     *      3、如果不携带token，返回未登录json数据，进行4
+     *      4、我方Web应用跳转登录页面，确认登录接口: /oauth/token,返回token，进行2    TODO? 前端浏览器有盗用token的问题
+     *      5、跳转授权页面，授权页面确认授权: /oauth/authorize,执行redirect
+     *      6、第三方Client调用/oauth/token获取token，get_user等形式接口获取若干用户信息
+     *
+     *      交互流程Web2:
+     *      1、第三方Client(Web)跳转我方Web应用的一个地址，我方Web应用请求授权: /oauth/authorize
+     *      2、不管是否携带token，返回未登录json数据，我方Web应用跳转登录授权页面            TODO? 没有了userApproval逻辑
+     *      3、登录授权页面确认: /oauth/authorize，携带登录信息和授权参数, 执行redirect
+     *      4、第三方Client调用/oauth/token获取token，get_user等形式接口获取若干用户信息
+     *
+     *
+     *      交互流程App:
+     *      1、第三方Client(App)调起我方App，我方App请求授权: /oauth/authorize
+     *      2、如果携带token，userApproval判断为true返回授权成功，进行6，否则返回授权json数据，进行5
+     *      3、如果不携带token，返回未登录json数据，进行4
+     *      4、我方App跳转登录页面，确认登录接口: /oauth/token,返回token，进行2
+     *      5、跳转授权页面，授权页面确认授权: /oauth/authorize,返回授权成功(App流程无需redirect)
+     *      6、第三方Client调用/oauth/token获取token，get_user等形式接口获取若干用户信息
+     *
      *      TODO??,交互流程还需验证，涉及的诸多组件也需要重写
      *
      *
