@@ -47,9 +47,7 @@ slf4j、logback、jcl-over-slf4j(将commons-logging适配成slf4j)
 生产环境应该提供logback.xml文件
 https://logback.qos.ch/manual/introduction.html
 
-使用shiro的Authentication Authority
-单体应用，前后端不分离模式下的权限控制
-1、资源的抽象：对于页面上所有的请求url都当成一个资源
+
 
 
 

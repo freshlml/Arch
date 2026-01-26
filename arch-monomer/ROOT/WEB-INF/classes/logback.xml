@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
 	<!-- 应用程序上下文名称  -->
-	<!-- <contextName>ArchMonomer</contextName> -->
+	<!-- <contextName>arch-monomer</contextName> -->
 	
 	<!-- 通过property定义变量 -->
-	<!-- <property name="FILE_PATH" value="/usr/log/ArchMonomer" /> -->
+	<!-- <property name="FILE_PATH" value="/usr/log/arch-monomer" /> -->
 	<property name="FILE_PATH" value="${user.home}/logs" />
 	<property name="FILE_HISTORY" value="60" />
 	<property name="FILE_SIZE" value="100MB" />
-	<property name="APP_NAME" value="ArchMonomer" />
+	<property name="APP_NAME" value="arch-monomer" />
 	
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
