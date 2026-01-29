@@ -5,7 +5,7 @@
 		<property name="FILE_PATH" value="${user.home}/logs" />
 	</springProfile>
 	<springProfile name="prod">
-		<property name="FILE_PATH" value="/usr/logs" />
+		<property name="FILE_PATH" value="${user.home}/logs" />
 	</springProfile>
 
 	<property name="PROJECT_NAME" value="arch-oauth2-auth" />
